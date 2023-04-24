@@ -1,0 +1,83 @@
+version: "3.9"
+
+services:
+
+  collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    command: [ "--config=/etc/otel-collector.yaml" ]
+    volumes:
+      - ./config-files/otel-collector.yaml:/etc/otel-collector.yaml
+    ports:
+      # - 1888:1888 # pprof extension
+      # - 13133:13133 # health_check extension
+      # - 55679:55679 # zpages extension
+      # - 8888:8888 # Prometheus metrics exposed by the collector
+      # - 8889:8889 # Prometheus exporter metrics
+      - 4317:4317 # OTLP gRPC receiver
+      - 4318:4318 # OTLP http receiver
+    depends_on:
+      - jaeger
+      - zipkin
+      - prometheus
+      - loki
+    networks:
+      - practical-otel-net  
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    # ports:
+    #   - "16686:16686"
+    #   - "14268"
+    #   - "14250"
+    networks:
+      - practical-otel-net  
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    # ports:
+    #   - "9411:9411"   
+    networks:
+      - practical-otel-net  
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./config-files/prometheus.yaml:/etc/prometheus/prometheus.yml
+    command: 
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.listen-address=:8080'
+    # ports:
+    #   - "8080:8080"
+    environment:
+      - config.file=/etc/prometheus/prometheus.yml
+    networks:
+      - practical-otel-net  
+
+  loki:
+    image: grafana/loki:latest
+    command: [ "-config.file=/etc/loki/local-config.yaml" ]
+    networks:
+      - practical-otel-net  
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config-files/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    depends_on:
+      - jaeger
+      - zipkin
+      - prometheus
+      - loki
+      - collector
+    networks:
+      - practical-otel-net  
+
+networks:
+  practical-otel-net:
+    name: practical-otel-net

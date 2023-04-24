@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__", "__", "{3BA20F7B-F3D0-455F-8006-45B6D0D02AA5}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{EDBDCA9F-D712-4A08-B5D0-27DEC3E51102}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Observability", "src\BuildingBlocks\BuildingBlocks.Observability\BuildingBlocks.Observability.csproj", "{466255F6-E9F1-4731-9366-3BAD749EA3BB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservices", "{8C0BDCCC-2892-498D-B586-52E9797F90B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.WeatherService", "src\Microservices\Microservices.WeatherService\Microservices.WeatherService.csproj", "{F4292C51-22A0-48FD-BFF2-2CD76ECA1C98}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{466255F6-E9F1-4731-9366-3BAD749EA3BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{466255F6-E9F1-4731-9366-3BAD749EA3BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{466255F6-E9F1-4731-9366-3BAD749EA3BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{466255F6-E9F1-4731-9366-3BAD749EA3BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4292C51-22A0-48FD-BFF2-2CD76ECA1C98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4292C51-22A0-48FD-BFF2-2CD76ECA1C98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4292C51-22A0-48FD-BFF2-2CD76ECA1C98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4292C51-22A0-48FD-BFF2-2CD76ECA1C98}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{466255F6-E9F1-4731-9366-3BAD749EA3BB} = {EDBDCA9F-D712-4A08-B5D0-27DEC3E51102}
+		{F4292C51-22A0-48FD-BFF2-2CD76ECA1C98} = {8C0BDCCC-2892-498D-B586-52E9797F90B2}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C80F53CC-BD55-451A-918C-E7F0FDC848AF}
+	EndGlobalSection
+EndGlobal
