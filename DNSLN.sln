@@ -13,11 +13,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__", "__", "{3BA20F7B-F3D0-
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{EDBDCA9F-D712-4A08-B5D0-27DEC3E51102}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Observability", "src\BuildingBlocks\BuildingBlocks.Observability\BuildingBlocks.Observability.csproj", "{466255F6-E9F1-4731-9366-3BAD749EA3BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildingBlocks.Observability", "src\BuildingBlocks\BuildingBlocks.Observability\BuildingBlocks.Observability.csproj", "{466255F6-E9F1-4731-9366-3BAD749EA3BB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservices", "{8C0BDCCC-2892-498D-B586-52E9797F90B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.WeatherService", "src\Microservices\Microservices.WeatherService\Microservices.WeatherService.csproj", "{F4292C51-22A0-48FD-BFF2-2CD76ECA1C98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.WeatherService", "src\Microservices\Microservices.WeatherService\Microservices.WeatherService.csproj", "{F4292C51-22A0-48FD-BFF2-2CD76ECA1C98}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientApps", "ClientApps", "{CB1D050A-3DDC-46E5-B05D-E37DC0124941}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientApps.ClientSimulator", "src\ClientApps\ClientApps.ClientSimulator\ClientApps.ClientSimulator.csproj", "{75ED9BA8-BAEE-44CB-9A43-A9B177A93688}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__http-requests", "__http-requests", "{D29DACB0-67EB-4FD7-9EAE-B6DBC822FBDE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client-simulator", "client-simulator", "{07E26550-8187-4786-907B-CB12FB314D64}"
+	ProjectSection(SolutionItems) = preProject
+		hello.http = hello.http
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +44,10 @@ Global
 		{F4292C51-22A0-48FD-BFF2-2CD76ECA1C98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4292C51-22A0-48FD-BFF2-2CD76ECA1C98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4292C51-22A0-48FD-BFF2-2CD76ECA1C98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75ED9BA8-BAEE-44CB-9A43-A9B177A93688}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75ED9BA8-BAEE-44CB-9A43-A9B177A93688}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75ED9BA8-BAEE-44CB-9A43-A9B177A93688}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75ED9BA8-BAEE-44CB-9A43-A9B177A93688}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -40,6 +55,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{466255F6-E9F1-4731-9366-3BAD749EA3BB} = {EDBDCA9F-D712-4A08-B5D0-27DEC3E51102}
 		{F4292C51-22A0-48FD-BFF2-2CD76ECA1C98} = {8C0BDCCC-2892-498D-B586-52E9797F90B2}
+		{75ED9BA8-BAEE-44CB-9A43-A9B177A93688} = {CB1D050A-3DDC-46E5-B05D-E37DC0124941}
+		{07E26550-8187-4786-907B-CB12FB314D64} = {D29DACB0-67EB-4FD7-9EAE-B6DBC822FBDE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C80F53CC-BD55-451A-918C-E7F0FDC848AF}

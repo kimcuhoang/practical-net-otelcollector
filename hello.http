@@ -1,0 +1,6 @@
+
+
+@url = http://localhost:6002
+
+###
+GET {{url}}/hello

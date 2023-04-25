@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Grpc.AspNetCore" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="..\..\__grpc\weather-service\greet.proto" Link="GrpcServices\WeatherProxyServices\greet.proto" GrpcServices="Client" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Observability\BuildingBlocks.Observability.csproj" />
+  </ItemGroup>
+
+</Project>

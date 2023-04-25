@@ -16,5 +16,21 @@ services:
       - name: http
         protocol: http
         port: 6001
+      - name: grpc
+        protocol: http
+        port: 16001
     env_file:
       - ./.env
+
+  - name: tye-client-simulator
+    project: ../../src/ClientApps/ClientApps.ClientSimulator/ClientApps.ClientSimulator.csproj
+    bindings:
+      - name: http
+        protocol: http
+        port: 6002
+      - name: grpc
+        protocol: http
+        port: 16002
+    env_file:
+      - ./.env
+  

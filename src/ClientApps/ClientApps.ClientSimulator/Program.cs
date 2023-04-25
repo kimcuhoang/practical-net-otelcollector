@@ -1,8 +1,9 @@
-using BuildingBlocks.Observability;
-using BuildingBlocks.Observability.Middlewares;
-using Microservices.WeatherService.GrpcServices;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using System.Net;
+using BuildingBlocks.Observability;
+using BuildingBlocks.Observability.Middlewares;
+using ClientApps.SimulateClientApp.GrpcServices;
+using ClientApps.SimulateClientApp.GrpcServices.WeatherProxyServices;
 
 var webApplicationBuilder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,7 @@ webApplicationBuilder
     .AddObservability()
     .AddGrpcServices();
 
+
 webApplicationBuilder.WebHost
             .CaptureStartupErrors(true)
             .UseKestrel(options =>
@@ -26,11 +28,11 @@ webApplicationBuilder.WebHost
                 options.AddServerHeader = false;
 
                 // We have to separate into different ports because we don't use TLS 
-                options.Listen(IPAddress.Any, 6001, listeningOptions =>
+                options.Listen(IPAddress.Any, 6002, listeningOptions =>
                 {
                     listeningOptions.Protocols = HttpProtocols.Http1;
                 });
-                options.Listen(IPAddress.Any, 16001, listeningOptions =>
+                options.Listen(IPAddress.Any, 16002, listeningOptions =>
                 {
                     listeningOptions.Protocols = HttpProtocols.Http2;
                 });
@@ -44,6 +46,17 @@ app
     .UseTraceIdResponseHeader()
     .MapGrpcServices();
 
-app.MapGet("/", () => "WeatherService");
+app.MapGet("/", () => "SimulateClientApp");
+
+app.MapGet("/hello", async (IWeatherGreetingGrpcService weatherGreetingService, CancellationToken cancellationToken) =>
+{
+    var result = await weatherGreetingService.SayHello(new Microservices.WeatherService.HelloRequest
+    {
+        Name = "SimulateClientApp"
+    }, cancellationToken);
+
+    return result.Message;
+});
+
 
 app.Run();

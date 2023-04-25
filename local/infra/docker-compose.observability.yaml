@@ -25,17 +25,17 @@ services:
 
   jaeger:
     image: jaegertracing/all-in-one:latest
-    # ports:
-    #   - "16686:16686"
-    #   - "14268"
-    #   - "14250"
+    ports:
+      - "16686:16686"
+      # - "14268"
+      # - "14250"
     networks:
       - practical-otel-net  
 
   zipkin:
     image: openzipkin/zipkin:latest
-    # ports:
-    #   - "9411:9411"   
+    ports:
+      - "9412:9411"   
     networks:
       - practical-otel-net  
 
@@ -46,8 +46,8 @@ services:
     command: 
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--web.listen-address=:8080'
-    # ports:
-    #   - "8080:8080"
+    ports:
+      - "8080:8080"
     environment:
       - config.file=/etc/prometheus/prometheus.yml
     networks:
