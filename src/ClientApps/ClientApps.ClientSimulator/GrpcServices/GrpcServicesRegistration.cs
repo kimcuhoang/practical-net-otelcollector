@@ -1,4 +1,5 @@
-﻿using ClientApps.SimulateClientApp.GrpcServices.WeatherProxyServices;
+﻿using ClientApps.ClientSimulator.GrpcServices;
+using ClientApps.SimulateClientApp.GrpcServices.WeatherProxyServices;
 using Microservices.WeatherService;
 
 namespace ClientApps.SimulateClientApp.GrpcServices;
@@ -9,11 +10,15 @@ public static class GrpcServicesRegistration
     {
         builder.Services.AddGrpc();
 
-        builder.Services
-            .AddGrpcClient<Greeter.GreeterClient>(client =>
-            {
-                client.Address = new Uri(@"http://localhost:16001");
-            });
+        var configuration = builder.Configuration;
+        var grpcServiceOptions = new GrpcServiceOptions();
+
+        configuration
+            .GetRequiredSection(nameof(GrpcServiceOptions))
+            .Bind(grpcServiceOptions);
+
+        grpcServiceOptions
+            .WeatherService.AsGrpcClient<Greeter.GreeterClient>(builder.Services);
 
         builder.Services
             .AddScoped<IWeatherGreetingGrpcService, WeatherGreetingGrpcService>();

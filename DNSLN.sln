@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__http-requests", "__http-r
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client-simulator", "client-simulator", "{07E26550-8187-4786-907B-CB12FB314D64}"
 	ProjectSection(SolutionItems) = preProject
-		hello.http = hello.http
+		http-requests\client-simulator\hello.http = http-requests\client-simulator\hello.http
 	EndProjectSection
 EndProject
 Global

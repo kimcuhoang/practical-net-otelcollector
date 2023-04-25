@@ -27,12 +27,19 @@ tye run ./local/tye/tye.yaml --dashboard
 
 3. Observe
 
-- Making some requests to `http://localhost:6001`
-- Access `grafana` at `http://localhost:3000` to explore 4 datasources
-  - Loki
-  - Jaeger
-  - Zipkin
-  - Prometheus
+- Making some requests to `http://localhost:6002/hello` or execute via Visual Studio
+
+![Execute http via Visual Studio](./doc-images/visualstudio-run-http-request.png)
+
+- Access `grafana` at `http://localhost:3000` to explore 4 datasources: Jaeger, Zipkin, Prometheus & Loki
+
+![Grafana Jaeger](./doc-images/grafana-jaeger.png)
+
+![Grafana Zipkin](./doc-images/grafana-zipkin.png)
+
+![Grafana Prometheus](./doc-images/grafana-prometheus.png)
+
+![Grafana Loki](./doc-images/grafana-loki.png)
 
 
 ## Development
@@ -77,6 +84,16 @@ webApplicationBuilder.AddObservability();
 
 ```
 
+---
+
 ## Give a Star! :star2:
 
 If you liked this project or if it helped you, please give a star :star: for this repository. Thank you!!!
+
+---
+
+## Resources
+
+- [Tye: Service Discovery](https://github.com/dotnet/tye/blob/main/docs/reference/service_discovery.md)
+
+- [Automatic Instrumentation of Containerized .NET Applications With OpenTelemetry](https://www.twilio.com/blog/automatic-instrumentation-of-containerized-dotnet-applications-with-opentelemetry)
