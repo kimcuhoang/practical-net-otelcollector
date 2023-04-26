@@ -2,7 +2,6 @@ using BuildingBlocks.Observability;
 using BuildingBlocks.Observability.Middlewares;
 using Microservices.WeatherService.GrpcServices;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using System.Net;
 
 var webApplicationBuilder = WebApplication.CreateBuilder(args);
 
@@ -26,11 +25,11 @@ webApplicationBuilder.WebHost
                 options.AddServerHeader = false;
 
                 // We have to separate into different ports because we don't use TLS 
-                options.Listen(IPAddress.Any, 6001, listeningOptions =>
+                options.ListenAnyIP(6001, listeningOptions =>
                 {
                     listeningOptions.Protocols = HttpProtocols.Http1;
                 });
-                options.Listen(IPAddress.Any, 16001, listeningOptions =>
+                options.ListenAnyIP(16001, listeningOptions =>
                 {
                     listeningOptions.Protocols = HttpProtocols.Http2;
                 });

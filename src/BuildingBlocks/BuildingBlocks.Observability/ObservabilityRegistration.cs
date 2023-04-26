@@ -112,7 +112,8 @@ public static class ObservabilityRegistration
                     .ReadFrom.Configuration(context.Configuration, serilogSection)
                     .Enrich.FromLogContext()
                     .Enrich.WithEnvironment(environment)
-                    .Enrich.WithProperty("ApplicationName", observabilityOptions.ServiceName);
+                    .Enrich.WithProperty("ApplicationName", observabilityOptions.ServiceName)
+                    .WriteTo.Console();
 
 
                 options.WriteTo.OpenTelemetry(cfg =>

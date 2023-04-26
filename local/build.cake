@@ -6,6 +6,8 @@ var target = Argument("target", "Default");
 // Variables
 //////////////////////////////////////////////////////////////////////
 
+var sourceFolder = @"../src";
+
 var tyeFolder = @"./tye";
 
 var dockerComposesPath = @"./infra";
@@ -14,6 +16,8 @@ var dockerComposeFiles = new[]
 {
     "docker-compose.observability.yaml"
 };
+
+var nameOfDockerImageBase = "localhost:5010/net7-alpine-base:latest";
 
 
 //////////////////////////////////////////////////////////////////////
@@ -60,10 +64,73 @@ Task("Infra-Start").Does(context =>
 
 });
 
+Task("Stop-And-Remove-Local-Registry").Does(() => {
+
+    // docker container stop registry && docker container rm -v registry
+
+    DockerRm(new DockerContainerRmSettings {
+        Force = true,
+        Volumes = true
+    }, "registry");
+});
+
+Task("Start-Local-Registry")
+.IsDependentOn("Stop-And-Remove-Local-Registry")
+.Does(() =>
+{
+    // docker run -d -p 5010:5000 --restart always --name registry registry:2
+    DockerRun(new DockerContainerRunSettings {
+        Detach = true,
+        Publish = new[] { "5010:5000" },
+        Name = "registry",
+        Restart = "always"
+    }, "registry:2", string.Empty);
+});
+
+Task("Build-Image-Base")
+.IsDependentOn("Start-Local-Registry")
+.Does(() => 
+{
+    DockerBuild(new DockerImageBuildSettings {
+        File = "./Dockerfile",
+        Tag = new [] { nameOfDockerImageBase }
+    }, "../");
+
+    DockerPush(nameOfDockerImageBase);
+});
+
+Task("Build-Docker-Images")
+.DoesForEach(new[] {"Microservices", "ClientApps"}, folder => 
+{
+    var csprojFiles = GetFiles($@"{sourceFolder}/{folder}/**/*.csproj");
+
+    nameOfDockerImageBase = "mcr.microsoft.com/dotnet/aspnet:7.0.5";
+
+    foreach(var csprojFile in csprojFiles)
+    {
+        DotNetPublish(csprojFile.FullPath, new DotNetPublishSettings{
+            ArgumentCustomization = builder => builder
+                        .Append("--os linux")
+                        .Append("--arch x64")
+                        .Append("-c Release")
+                        // .Append("-p:ContainerRegistry=localhost:5010")
+                        .Append("-p:ContainerRuntimeIdentifier=linux-x64")
+                        .Append($"-p:ContainerBaseImage={nameOfDockerImageBase}")
+                        .Append("-p:ContainerImageTags=latest"),
+            WorkingDirectory = csprojFile.GetDirectory()
+        });
+    }
+});
+
+
 Task("Tye").Does(() => {
 
+    var tyeFileName = "tye.yaml";
+    tyeFileName = "tye-container.yaml";
+    // tyeFileName = "tye-mixing.yaml";
+
     var logDirectory = System.IO.Path.Combine(tyeFolder, @".logs");
-    var tyeFilePath = System.IO.Path.Combine(tyeFolder, "tye.yaml");
+    var tyeFilePath = System.IO.Path.Combine(tyeFolder, tyeFileName);
 
     if (DirectoryExists(logDirectory))
     {
@@ -91,3 +158,9 @@ Task("Tye").Does(() => {
 Task("Default").Does(() => Information("Dotnet Practical"));
 
 RunTarget(target);
+
+
+
+//////////////////////////////////////////////////////////////////////
+// Function
+//////////////////////////////////////////////////////////////////////

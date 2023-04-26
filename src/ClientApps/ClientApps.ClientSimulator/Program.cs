@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using System.Net;
 using BuildingBlocks.Observability;
 using BuildingBlocks.Observability.Middlewares;
 using ClientApps.SimulateClientApp.GrpcServices;
@@ -28,11 +27,11 @@ webApplicationBuilder.WebHost
                 options.AddServerHeader = false;
 
                 // We have to separate into different ports because we don't use TLS 
-                options.Listen(IPAddress.Any, 6002, listeningOptions =>
+                options.ListenAnyIP(6002, listeningOptions =>
                 {
                     listeningOptions.Protocols = HttpProtocols.Http1;
                 });
-                options.Listen(IPAddress.Any, 16002, listeningOptions =>
+                options.ListenAnyIP(16002, listeningOptions =>
                 {
                     listeningOptions.Protocols = HttpProtocols.Http2;
                 });

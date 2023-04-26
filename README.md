@@ -97,3 +97,9 @@ If you liked this project or if it helped you, please give a star :star: for thi
 - [Tye: Service Discovery](https://github.com/dotnet/tye/blob/main/docs/reference/service_discovery.md)
 
 - [Automatic Instrumentation of Containerized .NET Applications With OpenTelemetry](https://www.twilio.com/blog/automatic-instrumentation-of-containerized-dotnet-applications-with-opentelemetry)
+
+- [Containerize a .NET app with dotnet publish](https://learn.microsoft.com/en-us/dotnet/core/docker/publish-as-container)
+
+- [Built-In Container Support for .NET 7 – Dockerize .NET Applications without Dockerfile!](https://codewithmukesh.com/blog/built-in-container-support-for-dotnet-7/)
+
+- [Install the .NET SDK or the .NET Runtime on Alpine](https://learn.microsoft.com/en-us/dotnet/core/install/linux-alpine)

@@ -1,0 +1,40 @@
+# tye application configuration file
+# read all about it at https://github.com/dotnet/tye
+#
+# when you've given us a try, we'd love to know what you think:
+#    https://aka.ms/AA7q20u
+#
+
+name: practical-otel-net
+
+network: practical-otel-net
+
+services:
+  - name: tye-weather
+    project: ../../src/Microservices/Microservices.WeatherService/Microservices.WeatherService.csproj
+    bindings:
+      - name: http
+        protocol: http
+        port: 6001
+      - name: grpc
+        protocol: http
+        port: 16001
+    env_file:
+      - ./.env
+
+  - name: tye-client-simulator-container
+    image: weather-client:latest
+    bindings:
+      - name: http
+        protocol: http
+        port: 6002
+        containerPort: 6002
+      - name: grpc
+        protocol: http
+        port: 16002
+    env:
+      - GrpcServiceOptions__WeatherService__Name=tye-weather
+      - ObservabilityOptions__CollectorUrl=http://collector:4317
+    env_file:
+      - ./.env
+  
