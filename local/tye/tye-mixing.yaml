@@ -32,9 +32,9 @@ services:
       - name: grpc
         protocol: http
         port: 16002
+    env_file:
+      - ./.env
     env:
       - GrpcServiceOptions__WeatherService__Name=tye-weather
       - ObservabilityOptions__CollectorUrl=http://collector:4317
-    env_file:
-      - ./.env
   

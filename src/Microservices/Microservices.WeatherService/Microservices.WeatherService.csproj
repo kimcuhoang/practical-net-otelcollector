@@ -7,6 +7,10 @@
 		<ContainerImageName>weather-service</ContainerImageName>
 	</PropertyGroup>
 
+	<ItemGroup Label="Entrypoint Assignment">
+		<ContainerEntrypoint Include="dotnet;Microservices.WeatherService.dll" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Grpc.AspNetCore" />
 	</ItemGroup>

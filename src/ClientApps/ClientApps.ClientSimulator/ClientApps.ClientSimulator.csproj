@@ -7,6 +7,11 @@
 		<ContainerImageName>weather-client</ContainerImageName>
 	</PropertyGroup>
 
+	<ItemGroup Label="Entrypoint Assignment">
+		<ContainerEntrypoint Include="dotnet;ClientApps.ClientSimulator.dll" />
+	</ItemGroup>
+
+
 	<ItemGroup>
 		<PackageReference Include="Grpc.AspNetCore" />
 		<PackageReference Include="Microsoft.Tye.Extensions.Configuration" />

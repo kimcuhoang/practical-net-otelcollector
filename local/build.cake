@@ -19,9 +19,6 @@ var dockerComposeFiles = new[]
 
 var nameOfDockerImageBase = "localhost:5010/net7-alpine-base:latest";
 
-// nameOfDockerImageBase = "net7-alpine-base:latest";
-
-
 //////////////////////////////////////////////////////////////////////
 // TASKS
 //////////////////////////////////////////////////////////////////////
@@ -106,8 +103,10 @@ Task("Build-Docker-Images")
 {
     var csprojFiles = GetFiles($@"{sourceFolder}/{folder}/**/*.csproj");
 
+    // Uncomment if do not want to use own custom image "localhost:5010/net7-alpine-base:latest"
+    //
     // nameOfDockerImageBase = "mcr.microsoft.com/dotnet/aspnet:7.0.5";
-    nameOfDockerImageBase = "mcr.microsoft.com/dotnet/aspnet:7.0.5-alpine3.17-amd64";
+    // nameOfDockerImageBase = "mcr.microsoft.com/dotnet/aspnet:7.0.5-alpine3.17-amd64";
 
     foreach(var csprojFile in csprojFiles)
     {
@@ -116,7 +115,7 @@ Task("Build-Docker-Images")
                         .Append("--os linux")
                         .Append("--arch x64")
                         .Append("-c Release")
-                        .Append("-p:ContainerRuntimeIdentifier=linux-x64")
+                        // .Append("-p:ContainerRuntimeIdentifier=linux-x64")
                         .Append($"-p:ContainerBaseImage={nameOfDockerImageBase}")
                         .Append("-p:ContainerImageTags=latest"),
             WorkingDirectory = csprojFile.GetDirectory()
@@ -128,7 +127,7 @@ Task("Build-Docker-Images")
 Task("Tye").Does(() => {
 
     var tyeFileName = "tye.yaml";
-    // tyeFileName = "tye-container.yaml";
+    tyeFileName = "tye-container.yaml";
     // tyeFileName = "tye-mixing.yaml";
 
     var logDirectory = System.IO.Path.Combine(tyeFolder, @".logs");
