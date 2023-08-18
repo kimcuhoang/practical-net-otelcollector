@@ -1,0 +1,9 @@
+
+### Retrieve all repositories
+
+GET http://localhost:5010/v2/_catalog
+
+
+### Manifests specific image by name & tag
+
+GET http://localhost:5010/v2/net7-alpine-base/manifests/latest

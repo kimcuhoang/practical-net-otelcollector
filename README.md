@@ -44,25 +44,6 @@ tye run ./local/tye/tye.yaml --dashboard
 
 ## Development
 
-### OpenTelemetry
-
-```xml
-<PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.4.0" />
-<PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol.Logs" Version="1.4.0-rc.4" />
-<PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.4.0" />
-<PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.14" />
-```
-
-### Serilog
-
-```xml
-
-<PackageVersion Include="Serilog.AspNetCore" Version="6.1.0" />
-<PackageVersion Include="Serilog.Enrichers.Context" Version="4.6.0" />
-<PackageVersion Include="Serilog.Sinks.OpenTelemetry" Version="1.0.0-dev-00129" />
-
-```
-
 ### Register & configure
 
 - Refer to [ObservabilityRegistration.cs](./src/BuildingBlocks/BuildingBlocks.Observability/ObservabilityRegistration.cs)

@@ -19,6 +19,26 @@ webApplicationBuilder
     .AddObservability()
     .AddGrpcServices();
 
+webApplicationBuilder.Services
+    // https://stackoverflow.com/a/71933535
+    // TLDR: AddEndpointsApiExplorer for minimal API
+    .AddEndpointsApiExplorer()
+    .AddSwaggerGen(swagger =>
+    {
+        // https://stackoverflow.com/a/71202135
+        // https://stackoverflow.com/a/53521371
+        swagger.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+        {
+            Title = "Practical .NET with OTEL Collector",
+            Version = "v1",
+            Contact = new Microsoft.OpenApi.Models.OpenApiContact
+            {
+                Email = "kim.cuhoang@gmail.com",
+                Name = "Kim CH"
+            }
+        });
+    });
+
 
 webApplicationBuilder.WebHost
             .CaptureStartupErrors(true)
@@ -40,22 +60,37 @@ webApplicationBuilder.WebHost
 
 var app = webApplicationBuilder.Build();
 
+//https://learn.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?source=recommendations&view=aspnetcore-7.0&tabs=visual-studio
+
+app
+.UseSwagger()
+.UseSwaggerUI(swagger =>
+{
+    //swagger.RoutePrefix = string.Empty;
+    swagger.SwaggerEndpoint("/swagger/v1/swagger.json", ".NET OTEL v1");
+});
 
 app
     .UseTraceIdResponseHeader()
     .MapGrpcServices();
 
-app.MapGet("/", () => "SimulateClientApp");
+app
+    .MapGet("/", () => TypedResults.Ok("SimulateClientApp"))
+    .WithName("Test-01")
+    .WithOpenApi();
 
-app.MapGet("/hello", async (IWeatherGreetingGrpcService weatherGreetingService, CancellationToken cancellationToken) =>
-{
-    var result = await weatherGreetingService.SayHello(new Microservices.WeatherService.HelloRequest
+app
+    .MapGet("/hello", async (IWeatherGreetingGrpcService weatherGreetingService, CancellationToken cancellationToken) =>
     {
-        Name = "SimulateClientApp"
-    }, cancellationToken);
+        var result = await weatherGreetingService.SayHello(new Microservices.WeatherService.HelloRequest
+        {
+            Name = "SimulateClientApp"
+        }, cancellationToken);
 
-    return result.Message;
-});
+        return TypedResults.Ok(result);
+    })
+    .WithName("Test-02")
+    .WithOpenApi(); ;
 
 
-app.Run();
+await app.RunAsync();

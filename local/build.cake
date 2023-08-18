@@ -127,7 +127,7 @@ Task("Build-Docker-Images")
 Task("Tye").Does(() => {
 
     var tyeFileName = "tye.yaml";
-    tyeFileName = "tye-container.yaml";
+    // tyeFileName = "tye-container.yaml";
     // tyeFileName = "tye-mixing.yaml";
 
     var logDirectory = System.IO.Path.Combine(tyeFolder, @".logs");

@@ -22,7 +22,7 @@ public static class ObservabilityRegistration
 
         // This is required if the collector doesn't expose an https endpoint. By default, .NET
         // only allows http2 (required for gRPC) to secure endpoints.
-        AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+        //AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
         var configuration = builder.Configuration;
 
@@ -109,7 +109,7 @@ public static class ObservabilityRegistration
                 var serilogSection = $"{nameof(ObservabilityOptions)}:{nameof(ObservabilityOptions)}:Serilog";
 
                 options
-                    .ReadFrom.Configuration(context.Configuration, serilogSection)
+                    .ReadFrom.Configuration(context.Configuration.GetRequiredSection(serilogSection))
                     .Enrich.FromLogContext()
                     .Enrich.WithEnvironment(environment)
                     .Enrich.WithProperty("ApplicationName", observabilityOptions.ServiceName)
