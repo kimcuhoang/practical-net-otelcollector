@@ -1,29 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
-	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<ContainerImageName>weather-client</ContainerImageName>
-	</PropertyGroup>
-
-	<ItemGroup Label="Entrypoint Assignment">
-		<ContainerEntrypoint Include="dotnet;ClientApps.ClientSimulator.dll" />
-	</ItemGroup>
-
-
-	<ItemGroup>
-		<PackageReference Include="Grpc.AspNetCore" />
-		<PackageReference Include="Microsoft.Tye.Extensions.Configuration" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Protobuf Include="..\..\__grpc\weather-service\greet.proto" Link="GrpcServices\WeatherProxyServices\greet.proto" GrpcServices="Client" />
-	</ItemGroup>
-
-
-	<ItemGroup>
-		<ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Observability\BuildingBlocks.Observability.csproj" />
-	</ItemGroup>
-
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ContainerImageName>weather-client</ContainerImageName>
+  </PropertyGroup>
+  <ItemGroup Label="Entrypoint Assignment">
+    <ContainerEntrypoint Include="dotnet;ClientApps.ClientSimulator.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" />
+    <PackageReference Include="Microsoft.Tye.Extensions.Configuration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Protobuf Include="..\..\__grpc\weather-service\greet.proto" Link="GrpcServices\WeatherProxyServices\greet.proto" GrpcServices="Client" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Observability\BuildingBlocks.Observability.csproj" />
+  </ItemGroup>
 </Project>

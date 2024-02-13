@@ -52,8 +52,7 @@ public static class ObservabilityRegistration
                 .SetErrorStatusOnException()
                 .SetSampler(new AlwaysOnSampler())
                 .AddAspNetCoreInstrumentation(options =>
-                {
-                    options.EnableGrpcAspNetCoreSupport = true;
+                {                    
                     options.RecordException = true;
                 });
 
@@ -106,7 +105,7 @@ public static class ObservabilityRegistration
                     .GetSection(nameof(ObservabilityOptions))
                     .Bind(observabilityOptions);
 
-                var serilogSection = $"{nameof(ObservabilityOptions)}:{nameof(ObservabilityOptions)}:Serilog";
+                var serilogSection = $"{nameof(ObservabilityOptions)}:Serilog";
 
                 options
                     .ReadFrom.Configuration(context.Configuration.GetRequiredSection(serilogSection))

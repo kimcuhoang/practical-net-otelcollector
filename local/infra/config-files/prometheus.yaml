@@ -15,5 +15,13 @@ scrape_configs:
       - targets:
           - collector:8889
           - collector:8888
+          - webapplication2:5000
         labels:
           group: otel-collector
+
+  - job_name: docker
+      # metrics_path defaults to '/metrics'
+      # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ["host.docker.internal:9323"]
