@@ -5,15 +5,18 @@ receivers:
         endpoint: 0.0.0.0:4318
       grpc:
         endpoint: 0.0.0.0:4317
-        
+
 processors:
   batch:
     timeout: 1s
-  # resource:
-  #   attributes:
-  #     - key: test.key
-  #       value: "test-value"
-  #       action: insert
+  resource:
+    attributes:
+      - action: insert
+        key: loki.resource.labels
+        value: service.name, service.namespace
+      - action: insert
+        key: loki.format
+        value: json
 
 exporters:
   logging:
@@ -21,9 +24,13 @@ exporters:
 
   prometheus:
     endpoint: 0.0.0.0:8889
+    namespace: test-space
+    resource_to_telemetry_conversion:
+      enabled: true
+    enable_open_metrics: true
 
-  jaeger:
-    endpoint: jaeger:14250
+  otlp/jaeger:
+    endpoint: jaeger:4317
     tls:
       insecure: true
 
@@ -33,12 +40,6 @@ exporters:
 
   loki:
     endpoint: http://loki:3100/loki/api/v1/push
-    format: json
-    labels:
-      resource:
-        service.name: "service_name"
-        service.instance.id: "service_instance_id"
-        
 
 extensions:
   health_check:
@@ -52,9 +53,9 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      # processors: [batch, resource]
-      processors: [batch]
-      exporters: [logging, jaeger, zipkin]
+      processors: [batch, resource]
+      # processors: [batch]
+      exporters: [logging, otlp/jaeger, zipkin]
 
     metrics:
       receivers: [otlp]

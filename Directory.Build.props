@@ -1,7 +1,7 @@
 <Project>
   <!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<NoWarn>CS8618</NoWarn>
@@ -10,7 +10,7 @@
 
 		<EnableSdkContainerSupport>true</EnableSdkContainerSupport>
 		<PublishProfile>DefaultContainer</PublishProfile>
-		<ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:7.0</ContainerBaseImage>
+		<ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:8.0</ContainerBaseImage>
 		<ContainerImageTags>latest</ContainerImageTags>
 	</PropertyGroup>
 </Project>
