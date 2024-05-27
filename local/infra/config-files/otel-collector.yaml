@@ -22,7 +22,7 @@ exporters:
   prometheus:
     endpoint: 0.0.0.0:8889
 
-  jaeger:
+  otlp:
     endpoint: jaeger:14250
     tls:
       insecure: true
@@ -33,11 +33,6 @@ exporters:
 
   loki:
     endpoint: http://loki:3100/loki/api/v1/push
-    format: json
-    labels:
-      resource:
-        service.name: "service_name"
-        service.instance.id: "service_instance_id"
         
 
 extensions:
@@ -54,7 +49,7 @@ service:
       receivers: [otlp]
       # processors: [batch, resource]
       processors: [batch]
-      exporters: [logging, jaeger, zipkin]
+      exporters: [logging, otlp, zipkin]
 
     metrics:
       receivers: [otlp]
