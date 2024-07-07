@@ -3,9 +3,14 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Grpc.AspNetCore" Version="2.63.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6" />
-    <PackageVersion Include="Serilog.Sinks.PeriodicBatching" Version="3.0.0" />
+    <PackageVersion Include="Grpc.AspNetCore" Version="2.64.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
+    <PackageVersion Include="Serilog" Version="4.0.0" />
+    <PackageVersion Include="Serilog.Sinks.OpenTelemetry" Version="3.0.0" />
+    <PackageVersion Include="Serilog.Sinks.PeriodicBatching" Version="5.0.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
   <!-- Serilog -->
