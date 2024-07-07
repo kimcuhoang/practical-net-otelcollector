@@ -2,6 +2,7 @@ using BuildingBlocks.Observability;
 using BuildingBlocks.Observability.Middlewares;
 using Microservices.WeatherService.GrpcServices;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Serilog;
 
 var webApplicationBuilder = WebApplication.CreateBuilder(args);
 
@@ -36,8 +37,9 @@ webApplicationBuilder.WebHost
             });
 
 
-var app = webApplicationBuilder.Build();
+using var app = webApplicationBuilder.Build();
 
+app.UseSerilogRequestLogging();
 
 app
     .UseTraceIdResponseHeader()

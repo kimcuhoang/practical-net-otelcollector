@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using BuildingBlocks.Observability;
 using ClientApps.SimulateClientApp.GrpcServices;
 using ClientApps.SimulateClientApp.GrpcServices.WeatherProxyServices;
+using Serilog;
 
 var webApplicationBuilder = WebApplication.CreateBuilder(args);
 
@@ -57,23 +58,19 @@ webApplicationBuilder.WebHost
             });
 
 
-var app = webApplicationBuilder.Build();
+using var app = webApplicationBuilder.Build();
+
+app.UseSerilogRequestLogging();
 
 //https://learn.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?source=recommendations&view=aspnetcore-7.0&tabs=visual-studio
 app
 .UseSwagger()
 .UseSwaggerUI(swagger =>
 {
-    //swagger.RoutePrefix = string.Empty;
     swagger.SwaggerEndpoint("/swagger/v1/swagger.json", ".NET OTEL v1");
 });
 
 app.MapGrpcServices();
-
-//app
-//    .MapGet("/", () => TypedResults.Ok("SimulateClientApp"))
-//    .WithName("Test-01")
-//    .WithOpenApi();
 
 app
     .MapGet("/", () => TypedResults.Redirect("/swagger", permanent: true))

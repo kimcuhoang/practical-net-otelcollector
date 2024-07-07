@@ -5,6 +5,7 @@
   <ItemGroup>
     <PackageVersion Include="Grpc.AspNetCore" Version="2.63.0" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6" />
+    <PackageVersion Include="Serilog.Sinks.PeriodicBatching" Version="3.0.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
   <!-- Serilog -->

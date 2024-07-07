@@ -7,7 +7,10 @@ public static class GrpcServicesRegistration
 {
     public static WebApplicationBuilder AddGrpcServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddGrpc();
+        builder.Services.AddGrpc(options =>
+        {
+            options.EnableDetailedErrors = true;
+        });
 
         return builder;
     }
