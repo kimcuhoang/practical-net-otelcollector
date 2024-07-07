@@ -11,7 +11,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Grpc.AspNetCore" />
-		<PackageReference Include="Microsoft.Tye.Extensions.Configuration" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using BuildingBlocks.Observability;
-using BuildingBlocks.Observability.Middlewares;
 using ClientApps.SimulateClientApp.GrpcServices;
 using ClientApps.SimulateClientApp.GrpcServices.WeatherProxyServices;
 
@@ -61,7 +60,6 @@ webApplicationBuilder.WebHost
 var app = webApplicationBuilder.Build();
 
 //https://learn.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?source=recommendations&view=aspnetcore-7.0&tabs=visual-studio
-
 app
 .UseSwagger()
 .UseSwaggerUI(swagger =>
@@ -70,14 +68,16 @@ app
     swagger.SwaggerEndpoint("/swagger/v1/swagger.json", ".NET OTEL v1");
 });
 
-app
-    .UseTraceIdResponseHeader()
-    .MapGrpcServices();
+app.MapGrpcServices();
+
+//app
+//    .MapGet("/", () => TypedResults.Ok("SimulateClientApp"))
+//    .WithName("Test-01")
+//    .WithOpenApi();
 
 app
-    .MapGet("/", () => TypedResults.Ok("SimulateClientApp"))
-    .WithName("Test-01")
-    .WithOpenApi();
+    .MapGet("/", () => TypedResults.Redirect("/swagger", permanent: true))
+    .ExcludeFromDescription();
 
 app
     .MapGet("/hello", async (IWeatherGreetingGrpcService weatherGreetingService, CancellationToken cancellationToken) =>

@@ -19,10 +19,16 @@
 docker compose -f ./local/infra/docker-compose.observability.yaml up -d
 ```
 
-2. Starting service by using [tye](https://github.com/dotnet/tye)
+2. Starting `weather-service`
 
 ```bash
-tye run ./local/tye/tye.yaml --dashboard
+dotnet run --project ./src/Microservices/Microservices.WeatherService/Microservices.WeatherService.csproj
+```
+
+3. Starting `client-service`
+
+```bash
+dotnet run --project src/ClientApps/ClientApps.ClientSimulator/ClientApps.ClientSimulator.csproj
 ```
 
 3. Observe
@@ -74,8 +80,6 @@ If you liked this project or if it helped you, please give a star :star: for thi
 ---
 
 ## Resources
-
-- [Tye: Service Discovery](https://github.com/dotnet/tye/blob/main/docs/reference/service_discovery.md)
 
 - [Automatic Instrumentation of Containerized .NET Applications With OpenTelemetry](https://www.twilio.com/blog/automatic-instrumentation-of-containerized-dotnet-applications-with-opentelemetry)
 

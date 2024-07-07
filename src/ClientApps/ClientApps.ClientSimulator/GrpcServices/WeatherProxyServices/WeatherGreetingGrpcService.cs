@@ -7,14 +7,9 @@ public interface IWeatherGreetingGrpcService
     Task<HelloReply> SayHello(HelloRequest request, CancellationToken cancellationToken = default);
 }
 
-public class WeatherGreetingGrpcService : IWeatherGreetingGrpcService
+public class WeatherGreetingGrpcService(Greeter.GreeterClient client) : IWeatherGreetingGrpcService
 {
-    private readonly Greeter.GreeterClient _client;
-
-    public WeatherGreetingGrpcService(Greeter.GreeterClient client)
-    {
-        this._client = client;
-    }
+    private readonly Greeter.GreeterClient _client = client;
 
     public async Task<HelloReply> SayHello(HelloRequest request, CancellationToken cancellationToken = default)
     {

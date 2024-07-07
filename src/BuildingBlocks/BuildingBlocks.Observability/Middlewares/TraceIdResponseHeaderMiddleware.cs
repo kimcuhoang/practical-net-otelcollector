@@ -5,14 +5,9 @@ using System.Diagnostics;
 
 namespace BuildingBlocks.Observability.Middlewares;
 
-public class TraceIdResponseHeaderMiddleware
+public class TraceIdResponseHeaderMiddleware(RequestDelegate next)
 {
-    private readonly RequestDelegate _next;
-
-    public TraceIdResponseHeaderMiddleware(RequestDelegate next)
-    {
-        this._next = next ?? throw new ArgumentNullException(nameof(next));
-    }
+    private readonly RequestDelegate _next = next ?? throw new ArgumentNullException(nameof(next));
 
     [DebuggerStepThrough]
     public async Task Invoke(HttpContext context)
@@ -21,10 +16,7 @@ public class TraceIdResponseHeaderMiddleware
 
         using (LogContext.PushProperty("TraceId", traceId.ToString()))
         {
-            if (!context.Response.Headers.ContainsKey("TraceId"))
-            {
-                context.Response.Headers.Add("TraceId", traceId);
-            }
+            context.Response.Headers.Append("TraceId", traceId);
 
             await _next(context);
         }

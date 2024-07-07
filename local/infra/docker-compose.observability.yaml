@@ -1,5 +1,3 @@
-version: "3.9"
-
 include:
   - compose.collector.yaml
   - compose.tracing.yaml

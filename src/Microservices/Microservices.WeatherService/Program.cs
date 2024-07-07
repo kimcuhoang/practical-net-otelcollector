@@ -45,4 +45,4 @@ app
 
 app.MapGet("/", () => "WeatherService");
 
-app.Run();
+await app.RunAsync();
