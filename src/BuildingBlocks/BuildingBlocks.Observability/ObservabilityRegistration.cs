@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
-using Serilog.Configuration;
 using Serilog.Settings.Configuration;
 using Serilog.Sinks.OpenTelemetry;
 
@@ -27,6 +27,8 @@ public static class ObservabilityRegistration
         builder.AddSerilog(observabilityOptions);
         builder.Services
             .AddOpenTelemetry()
+            .ConfigureResource(resource => resource.AddService(observabilityOptions.ServiceName))
+            .AddMetrics(observabilityOptions)
             .AddTracing(observabilityOptions);
 
         return builder;
@@ -38,8 +40,6 @@ public static class ObservabilityRegistration
         builder.WithTracing(tracing =>
         {
             tracing
-                .AddSource(observabilityOptions.ServiceName)
-                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(observabilityOptions.ServiceName))
                 .SetErrorStatusOnException()
                 .SetSampler(new AlwaysOnSampler())
                 .AddAspNetCoreInstrumentation(options =>
@@ -48,11 +48,11 @@ public static class ObservabilityRegistration
                 });
 
             tracing
-                .AddOtlpExporter(options =>
+                .AddOtlpExporter(_ =>
                 {
-                    options.Endpoint = observabilityOptions.CollectorUri;
-                    options.ExportProcessorType = ExportProcessorType.Batch;
-                    options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+                    _.Endpoint = observabilityOptions.CollectorUri;
+                    _.ExportProcessorType = ExportProcessorType.Batch;
+                    _.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
                 });
         });
 
@@ -61,23 +61,19 @@ public static class ObservabilityRegistration
 
     private static OpenTelemetryBuilder AddMetrics(this OpenTelemetryBuilder builder, ObservabilityOptions observabilityOptions)
     {
-        //builder.WithMetrics(metrics =>
-        //{
-        //    var meter = new Meter(observabilityOptions.ServiceName);
+        builder.WithMetrics(metrics =>
+        {
+            metrics
+                .AddAspNetCoreInstrumentation();
 
-        //    metrics
-        //        .AddMeter(meter.Name)
-        //        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(meter.Name))
-        //        .AddAspNetCoreInstrumentation();
-
-        //    metrics
-        //        .AddOtlpExporter(options =>
-        //        {
-        //            options.Endpoint = observabilityOptions.CollectorUri;
-        //            options.ExportProcessorType = ExportProcessorType.Batch;
-        //            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
-        //        });
-        //});
+            metrics
+                .AddOtlpExporter(_ =>
+                {
+                    _.Endpoint = observabilityOptions.CollectorUri;
+                    _.ExportProcessorType = ExportProcessorType.Batch;
+                    _.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+                });
+        });
 
         return builder;
     }
@@ -102,7 +98,8 @@ public static class ObservabilityRegistration
             serilog
                 .WriteTo.OpenTelemetry(c =>
                 {
-                    c.Endpoint = $"{observabilityOptions.CollectorUrl}/v1/logs";
+                    c.Endpoint = observabilityOptions.CollectorUrl;
+                    c.Protocol = OtlpProtocol.Grpc;
                     c.IncludedData = IncludedData.TraceIdField | IncludedData.SpanIdField | IncludedData.SourceContextAttribute;
                     c.ResourceAttributes = new Dictionary<string, object>
                                                     {

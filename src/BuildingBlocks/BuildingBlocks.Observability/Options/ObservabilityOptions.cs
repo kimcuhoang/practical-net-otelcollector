@@ -9,4 +9,6 @@ public class ObservabilityOptions
     public bool EnabledMetrics { get; set; } = false;
 
     public Uri CollectorUri => new(this.CollectorUrl);
+
+    public string OtlpLogsCollectorUrl => $"{this.CollectorUrl}/v1/logs";
 }

@@ -20,8 +20,8 @@ processors:
         value: json
 
 exporters:
-  logging:
-    loglevel: info
+  debug:
+    verbosity: normal
 
   prometheus:
     endpoint: 0.0.0.0:8889
@@ -41,11 +41,9 @@ exporters:
 
   loki:
     endpoint: http://loki:3100/loki/api/v1/push
-    # format: json
-    # labels:
-    #   resource:
-    #     service.name: "service_name"
-    #     service.instance.id: "service_instance_id"
+    default_labels_enabled:
+      exporter: false
+      job: true
         
 
 extensions:
@@ -61,16 +59,15 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch, resource]
-      # processors: [batch]
-      exporters: [logging, otlp/jaeger, zipkin]
+      exporters: [debug, otlp/jaeger, zipkin]
 
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [logging, prometheus]
+      exporters: [debug, prometheus]
 
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [logging, loki]
+      exporters: [debug, loki]
 
