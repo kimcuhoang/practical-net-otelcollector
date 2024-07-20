@@ -2,15 +2,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
+using Serilog.Settings.Configuration;
 using Serilog.Sinks.OpenTelemetry;
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
 
 namespace BuildingBlocks.Observability;
 
@@ -18,12 +16,6 @@ public static class ObservabilityRegistration
 {
     public static WebApplicationBuilder AddObservability(this WebApplicationBuilder builder)
     {
-        Activity.DefaultIdFormat = ActivityIdFormat.W3C;
-
-        // This is required if the collector doesn't expose an https endpoint. By default, .NET
-        // only allows http2 (required for gRPC) to secure endpoints.
-        //AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-
         var configuration = builder.Configuration;
 
         ObservabilityOptions observabilityOptions = new();
@@ -32,37 +24,35 @@ public static class ObservabilityRegistration
             .GetRequiredSection(nameof(ObservabilityOptions))
             .Bind(observabilityOptions);
 
-        builder.Host.AddSerilog();
-
+        builder.AddSerilog(observabilityOptions);
         builder.Services
-                .AddOpenTelemetry()
-                .AddTracing(observabilityOptions)
-                .AddMetrics(observabilityOptions);
+            .AddOpenTelemetry()
+            .ConfigureResource(resource => resource.AddService(observabilityOptions.ServiceName))
+            .AddMetrics(observabilityOptions)
+            .AddTracing(observabilityOptions);
 
         return builder;
     }
-
     private static OpenTelemetryBuilder AddTracing(this OpenTelemetryBuilder builder, ObservabilityOptions observabilityOptions)
     {
+        if (!observabilityOptions.EnabledTracing) return builder;
+
         builder.WithTracing(tracing =>
         {
             tracing
-                .AddSource(observabilityOptions.ServiceName)
-                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(observabilityOptions.ServiceName))
                 .SetErrorStatusOnException()
                 .SetSampler(new AlwaysOnSampler())
                 .AddAspNetCoreInstrumentation(options =>
                 {
-                    options.EnableGrpcAspNetCoreSupport = true;
                     options.RecordException = true;
                 });
 
             tracing
-                .AddOtlpExporter(options =>
+                .AddOtlpExporter(_ =>
                 {
-                    options.Endpoint = observabilityOptions.CollectorUri;
-                    options.ExportProcessorType = ExportProcessorType.Batch;
-                    options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+                    _.Endpoint = observabilityOptions.CollectorUri;
+                    _.ExportProcessorType = ExportProcessorType.Batch;
+                    _.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
                 });
         });
 
@@ -73,64 +63,54 @@ public static class ObservabilityRegistration
     {
         builder.WithMetrics(metrics =>
         {
-            var meter = new Meter(observabilityOptions.ServiceName);
-
             metrics
-                .AddMeter(meter.Name)
-                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(meter.Name))
                 .AddAspNetCoreInstrumentation();
 
             metrics
-                .AddOtlpExporter(options =>
+                .AddOtlpExporter(_ =>
                 {
-                    options.Endpoint = observabilityOptions.CollectorUri;
-                    options.ExportProcessorType = ExportProcessorType.Batch;
-                    options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+                    _.Endpoint = observabilityOptions.CollectorUri;
+                    _.ExportProcessorType = ExportProcessorType.Batch;
+                    _.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
                 });
         });
 
         return builder;
     }
 
-    public static IHostBuilder AddSerilog(this IHostBuilder hostBuilder)
+    private static WebApplicationBuilder AddSerilog(this WebApplicationBuilder builder, ObservabilityOptions observabilityOptions)
     {
-        hostBuilder
-            .UseSerilog((context, provider, options) =>
-            {
-                var environment = context.HostingEnvironment.EnvironmentName;
-                var configuration = context.Configuration;
+        var services = builder.Services;
+        var configuration = builder.Configuration;
 
-                ObservabilityOptions observabilityOptions = new();
-
-                configuration
-                    .GetSection(nameof(ObservabilityOptions))
-                    .Bind(observabilityOptions);
-
-                var serilogSection = $"{nameof(ObservabilityOptions)}:{nameof(ObservabilityOptions)}:Serilog";
-
-                options
-                    .ReadFrom.Configuration(context.Configuration.GetRequiredSection(serilogSection))
-                    .Enrich.FromLogContext()
-                    .Enrich.WithEnvironment(environment)
-                    .Enrich.WithProperty("ApplicationName", observabilityOptions.ServiceName)
-                    .WriteTo.Console();
-
-
-                options.WriteTo.OpenTelemetry(cfg =>
+        services.AddSerilog((sp, serilog) =>
+        {
+            serilog
+                .ReadFrom.Configuration(configuration, new ConfigurationReaderOptions
                 {
-                    cfg.Endpoint = $"{observabilityOptions.CollectorUrl}/v1/logs";
-                    cfg.IncludedData = IncludedData.TraceIdField | IncludedData.SpanIdField;
-                    cfg.ResourceAttributes = new Dictionary<string, object>
-                                                {
-                                                    {"service.name", observabilityOptions.ServiceName},
-                                                    {"index", 10},
-                                                    {"flag", true},
-                                                    {"value", 3.14}
-                                                };
-                });
-               
-            });
-        return hostBuilder;
-    }
+                    SectionName = $"{nameof(ObservabilityOptions)}:{nameof(Serilog)}"
+                })
+                .ReadFrom.Services(sp)
+                .Enrich.FromLogContext()
+                .Enrich.WithProperty("ApplicationName", observabilityOptions.ServiceName)
+                .WriteTo.Console();
 
+            serilog
+                .WriteTo.OpenTelemetry(c =>
+                {
+                    c.Endpoint = observabilityOptions.CollectorUrl;
+                    c.Protocol = OtlpProtocol.Grpc;
+                    c.IncludedData = IncludedData.TraceIdField | IncludedData.SpanIdField | IncludedData.SourceContextAttribute;
+                    c.ResourceAttributes = new Dictionary<string, object>
+                                                    {
+                                                        {"service.name", observabilityOptions.ServiceName},
+                                                        {"index", 10},
+                                                        {"flag", true},
+                                                        {"value", 3.14}
+                                                    };
+                });
+        });
+
+        return builder;
+    }
 }

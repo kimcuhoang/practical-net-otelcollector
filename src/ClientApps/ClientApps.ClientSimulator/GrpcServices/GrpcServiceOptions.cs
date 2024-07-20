@@ -7,14 +7,14 @@ public class GrpcServiceOptions
     public class GrpcServiceDependency
     {
         public string Name { get; set; }
-        public string Binding { get; set; } = "grpc";
+        public string ServiceUrl { get; set; }
+        public string ServiceGrpcUrl { get; set; }
 
         public void AsGrpcClient<TClient>(IServiceCollection services) where TClient: class
         {
             services.AddGrpcClient<TClient>((serviceProvider, client) =>
             {
-                var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-                var uri = configuration.GetServiceUri(this.Name, binding: this.Binding);
+                var uri = new Uri(this.ServiceGrpcUrl);
 
                 var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
                 var logger = loggerFactory.CreateLogger<TClient>();
@@ -24,6 +24,6 @@ public class GrpcServiceOptions
             });
         }
 
-        public override string ToString() => $"{Name}-{Binding}";
+        public override string ToString() => $"{this.Name}-{this.ServiceGrpcUrl}";
     }
 }

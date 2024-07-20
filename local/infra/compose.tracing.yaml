@@ -1,12 +1,8 @@
-version: "3.9"
-
 services:
   jaeger:
     image: jaegertracing/all-in-one:latest
     ports:
-      - "16686:16686"
-      # - "14268"
-      # - "14250"
+      - "16686:16686"                    # Jaeger UI
     networks:
       - practical-otel-net  
 

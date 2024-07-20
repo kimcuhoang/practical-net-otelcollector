@@ -1,24 +1,17 @@
 <Project>
-  <PropertyGroup>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageVersion Include="Grpc.AspNetCore" Version="2.55.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
-    <PackageVersion Include="Microsoft.Tye.Extensions.Configuration" Version="0.10.0-alpha.21420.1" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-  </ItemGroup>
-  <!-- OpenTelemetry: Traces & Metrics -->
-  <ItemGroup>
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.4.0" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.5.1" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.5.1-beta.1" />
-  </ItemGroup>
-  <!-- Serilog -->
-  <ItemGroup>
-    <PackageVersion Include="Serilog.AspNetCore" Version="7.0.0" />
-    <PackageVersion Include="Serilog.Enrichers.Context" Version="4.6.5" />
-    <PackageVersion Include="Serilog.Sinks.OpenTelemetry" Version="1.0.2" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol.Logs" Version="1.5.0-rc.1" />
-  </ItemGroup>
+	<PropertyGroup>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageVersion Include="Grpc.AspNetCore" Version="2.64.0" />
+		<PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
+		<PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.9.0" />
+		<PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.9.0" />
+		<PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
+		<PackageVersion Include="Serilog" Version="4.0.0" />
+		<PackageVersion Include="Serilog.AspNetCore" Version="8.0.1" />
+		<PackageVersion Include="Serilog.Sinks.OpenTelemetry" Version="3.0.0" />
+		<PackageVersion Include="Serilog.Sinks.PeriodicBatching" Version="5.0.0" />
+		<PackageVersion Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+	</ItemGroup>
 </Project>

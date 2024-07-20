@@ -1,0 +1,6 @@
+﻿@ClientSimulator_HostAddress = http://localhost:6002
+
+
+GET {{ClientSimulator_HostAddress}}/hello
+
+
